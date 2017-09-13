@@ -1,7 +1,7 @@
 var Strategy = require("passport-local").Strategy;
 var pg = require('pg');
 var bcrypt = require('bcrypt');
-var pintextDatabaseClient = require('../db/index.js');
+var pintextDatabaseClient = require('../../db/index.js');
 
 module.exports = function (passport) {
 

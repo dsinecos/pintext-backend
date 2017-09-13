@@ -22,7 +22,7 @@ var sessionOptions = {
 };
 
 var index = require('./api/index');
-var users = require('./api/users');
+var users = require('./api/users/users.js');
 
 var app = express();
 
@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(passport.initialize());
 app.use(passport.session());
-require('./api/passportLocalAuthentication.js')(passport);
+require('./api/users/passportLocalAuthentication.js')(passport);
 
 app.use('/', index);
 app.use('/users', users);
