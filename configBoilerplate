@@ -1,0 +1,47 @@
+What to change/ remove in which files?
+- Variable names
+- Database connection information
+- Database tables setup
+
+app.js
+1. Session management - 
+var PostgreSqlStore = new connectPgSimple({
+  conString: "pg://postgres:postgres@localhost:5432/[NameOfDatabase]",
+  tableName: "NameOfTableInDatabaseToStoreSession",
+  pruneSessionInterval: false,
+});
+
+var sessionOptions = {
+  secret: "[Change secret key]",
+  resave: false,
+  saveUninitialized: false,
+  store: PostgreSqlStore,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+};
+
+2. Change the saved favicon.ico file inside /public
+
+db Folder
+sessionTableSetup.sql
+1. Run sessionTableSetup.sql to define the schema for the table to store sessions
+
+index.js
+var connectionString = process.env.DATABASE_URL || "pg://postgres:postgres@localhost:5432/[NameOfDatabase]";
+Change name of the variable that stores the connectionClient to the database {pintextDatabaseClient}
+
+dbSetup.js
+1. 
+var connectionString = process.env.DATABASE_URL || "pg://postgres:postgres@localhost:5432/[NameOfDatabase]";
+
+2. Change name of the variable that stores the connectionClient to the database {pintextDatabaseClient}
+3. Change the tables to be created and dropped and their corresponding schema. Divide the tables into primary and secondary depending upon their Foreign Keys and dependencies on other tables
+Run dbSetup.js to setup the tables for your app
+
+api/users Folder
+passportLocalAuthentication.js
+1. Change name of the variable that stores the connectionClient to the database {pintextDatabaseClient}
+2. Change the name of the table and the record name in sqlQuery variables
+
+users.js
+1. Change name of the variable that stores the connectionClient to the database {pintextDatabaseClient}
+2. Change the name of the table and the record name in sqlQuery variables
