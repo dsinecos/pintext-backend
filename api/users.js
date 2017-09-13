@@ -4,9 +4,10 @@ var bcrypt = require('bcrypt');
 var pintextDatabaseClient = require('../db/index.js');
 var passport = require('passport');
 var isAuthenticated = require('./isAuthenticated.js');
+var validateUserData = require('./validateUserData.js');
 
 // For user login
-router.post('/login', passport.authenticate('local', { failureRedirect: '/failed' }), function (req, res, next) {
+router.post('/login', validateUserData, passport.authenticate('local', { failureRedirect: '/failed' }), function (req, res, next) {
   res.write("Logged in successfully \n");
   var userData = JSON.stringify(req.user, null, "  ");
   res.write("This is the name of the currently logged in user " + userData);
@@ -26,7 +27,7 @@ router.get('/rt', isAuthenticated, function (req, res, next) {
 })
 
 // For user signup 
-router.post('/', function (req, res, next) {
+router.post('/', validateUserData, function (req, res, next) {
   console.log("Inside user signup");
 
   var saltRounds = 10;
