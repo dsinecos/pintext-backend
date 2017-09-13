@@ -9,8 +9,6 @@ var validateUserData = require('./validateUserData.js');
 // For user login
 router.post('/login', validateUserData, passport.authenticate('local', { failureRedirect: '/failed' }), function (req, res, next) {
   res.write("Logged in successfully \n");
-  var userData = JSON.stringify(req.user, null, "  ");
-  res.write("This is the name of the currently logged in user " + userData);
   res.end();
 });
 
@@ -37,7 +35,6 @@ router.get('/failed', function (req, res, next) {
 
 // For successive requests after Login
 router.get('/rt', isAuthenticated, function (req, res, next) {
-  res.write("For Testing successive requests from a logged in user \n");
   res.write("This is the name of the currently logged in user " + JSON.stringify(req.user, null, "  "));
   res.end();
 })
@@ -69,7 +66,7 @@ router.post('/', validateUserData, function (req, res, next) {
 
       bcrypt.hash(password, salt)
         .then(function (hash) {
-          //DB operation
+          
           var sqlQuery = `INSERT
               INTO pintext_users (username, password)
               VALUES ($1, $2)`;
@@ -79,7 +76,7 @@ router.post('/', validateUserData, function (req, res, next) {
               res.status(200).send("Account created successfully");
             })
             .catch(function (err) {
-              // How to check if the error is violating duplication constraint?
+              // To check if the sqlQuery is violating the duplication constraint in the table
               if (err.code === '23505') {
                 error.status = 400;
                 error.clientMessage.developerMessage = "Please choose a different username, that username already exists";
