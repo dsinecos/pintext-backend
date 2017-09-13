@@ -19,10 +19,24 @@ module.exports = function (passport) {
                         return cb(null, false);
                     }
                 }).catch(function(err) {
-                    res.status(500).send("Internal server error ");
-                    res.end();
-                    console.log("Error while using bcrypt to compare the user entered password with the hash in the database. Following is the error");
-                    console.log(err);
+
+                    var error = new Error();
+                    error = {
+                        status: 500,
+                        clientMessage: {
+                            code: '',
+                            type: '',
+                            developerMessage: 'Internal Server Error',
+                            endUserMessage: 'Internal Server Error'
+                        },
+                        serverMessage: {
+                            location: 'File - passportLocalAuthentication.js, Function - bcrypt.compare()',
+                            context: 'Comparing hashed and salted passwords using bcrypt.compare',
+                            error: err
+                        }
+                    }
+                    next(error);
+
                 });                
             });
         }));
@@ -60,8 +74,6 @@ module.exports = function (passport) {
                     FROM pintext_users
                     WHERE user_id=$1`;
 
-        // pintextDatabaseClient.query(sqlQuery, [id], returnedID);
-
         pintextDatabaseClient.query(sqlQuery, [id])
         .then(function(result) {
             fn(null, result[0]);
@@ -70,9 +82,6 @@ module.exports = function (passport) {
             fn(error, null);
         });
 
-        // function returnedID(err, result) {
-        //     fn(err, result.rows[0]);
-        // }
     }
 
 }

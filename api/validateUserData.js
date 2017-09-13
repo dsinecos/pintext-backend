@@ -19,8 +19,25 @@ module.exports = function (req, res, next) {
 
     validationResult.then(function(result) {
         next();
-    }).catch(function (error) {
-        next(error);        
+    }).catch(function (err) {
+
+        var error = new Error();
+        error = {
+            status: 400,
+            clientMessage: {
+                code: '',
+                type: '',
+                developerMessage: 'Input failed validation criteria. Please revise input and try',
+                endUserMessage: 'Input failed validation criteria. Please revise input and try'
+            },
+            serverMessage: {
+                location: 'File - validateUserData.js',
+                context: 'Input validation failed',
+                error: err
+            }
+        }
+        next(error);
+
     });
 }
 

@@ -16,7 +16,23 @@ router.post('/login', validateUserData, passport.authenticate('local', { failure
 
 // For Failed Login
 router.get('/failed', function (req, res, next) {
-  res.status(401).send("Login Failed, Try again");
+
+  var error = new Error();
+  error = {
+    status: 401,
+    clientMessage: {
+      code: '',
+      type: '',
+      developerMessage: 'Unauthorized',
+      endUserMessage: 'Unauthorized'
+    },
+    serverMessage: {
+      location: 'File - users.js',
+      context: 'Unauthorized',
+      error: null
+    }
+  }
+  next(error);
 })
 
 // For successive requests after Login
@@ -28,50 +44,84 @@ router.get('/rt', isAuthenticated, function (req, res, next) {
 
 // For user signup 
 router.post('/', validateUserData, function (req, res, next) {
-  console.log("Inside user signup");
 
   var saltRounds = 10;
   var password = req.body.password;
 
-  bcrypt.genSalt(saltRounds).then(function (salt) {
+  var error = new Error();
+  error = {
+    status: 500,
+    clientMessage: {
+      code: '',
+      type: '',
+      developerMessage: '',
+      endUserMessage: ''
+    },
+    serverMessage: {
+      location: 'File - users.js | Route - POST /users/',
+      context: 'What action was attempted that led to this error',
+      error: null,
+    }
+  }
 
-    bcrypt.hash(password, salt).then(function (hash) {
+  bcrypt.genSalt(saltRounds)
+    .then(function (salt) {
 
-      //DB operation
-      var sqlQuery = `INSERT
+      bcrypt.hash(password, salt)
+        .then(function (hash) {
+          //DB operation
+          var sqlQuery = `INSERT
               INTO pintext_users (username, password)
               VALUES ($1, $2)`;
 
-      pintextDatabaseClient.query(sqlQuery, [req.body.username, hash]).then(function (data) {
-        res.write("Account created successfully");
-        res.end();
-      }).catch(function (err) {
-        // How to check if the error is violating duplication constraint?
-        if (err.code === '23505') {
-          res.write("Please choose a different username, that username already exists");
-          res.end();
-          console.log("Error due to duplicate username fields in the dailyreview_user table. Following is the error");
-          console.log(err);
-        } else {
-          res.status(500).send("Internal server error");
-          res.end();
-          console.log("Error while inserting record into dailyreview_user table. Following is the error");
-          console.log(err);
-        }
-      });
+          pintextDatabaseClient.query(sqlQuery, [req.body.username, hash])
+            .then(function (data) {
+              res.status(200).send("Account created successfully");
+            })
+            .catch(function (err) {
+              // How to check if the error is violating duplication constraint?
+              if (err.code === '23505') {
+                error.status = 400;
+                error.clientMessage.developerMessage = "Please choose a different username, that username already exists";
+                error.clientMessage.endUserMessage = "Please choose a different username, that username already exists";
+                error.serverMessage.context = "Adding query to database"
+                error.serverMessage.error = err;
 
-    }).catch(function (err) {
-      res.status(500).send("Internal server error");
-      res.end();
-      console.log("Error while creating the hash for the password. Following is the error");
-      console.log(err);
+                next(error);
+              
+              } else {
+
+                error.status = 500;
+                error.clientMessage.developerMessage = "Internal server error";
+                error.clientMessage.endUserMessage = "Internal server error";
+                error.serverMessage.context = "Adding query to database"
+                error.serverMessage.error = err;
+
+                next(error);
+                
+              }
+            });
+
+        })
+        .catch(function (err) {
+          error.status = 500;
+          error.clientMessage.developerMessage = "Internal server error";
+          error.clientMessage.endUserMessage = "Internal server error";
+          error.serverMessage.context = "Error while creating the hash for the password";
+          error.serverMessage.error = err;
+
+          next(error);
+        })
     })
-  }).catch(function (err) {
-    res.status(500).send("Internal server error");
-    res.end();
-    console.log("Error while generating salt. Following is the error");
-    console.log(err);
-  });
+    .catch(function (err) {
+      error.status = 500;
+      error.clientMessage.developerMessage = "Internal server error";
+      error.clientMessage.endUserMessage = "Internal server error";
+      error.serverMessage.context = "Error while generating salt";
+      error.serverMessage.error = err;
+
+      next(error);
+    });
 
 });
 
