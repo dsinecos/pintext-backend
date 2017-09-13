@@ -2,7 +2,7 @@
 // Export connection from a pool for the scalability of the app?
 
 var pgp = require('pg-promise')();
-var connectionString = process.env.DATABASE_URL || "pg://admin:guest@localhost:5432/pintext";
+var connectionString = process.env.DATABASE_URL || "pg://postgres:postgres@localhost:5432/pintext";
 var pintextDatabaseClient = pgp(connectionString);
 
 module.exports = pintextDatabaseClient;
