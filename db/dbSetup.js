@@ -40,7 +40,7 @@ function generateTables() {
 
     var queryToGenerateUserTable = "CREATE TABLE IF NOT EXISTS pintext_users(user_id SERIAL PRIMARY KEY, username varchar(128) NOT NULL UNIQUE, password varchar(256) NOT NULL)";
     var queryToGenerateSnippetTable = "CREATE TABLE IF NOT EXISTS pintext_snippets(snippet_id SERIAL PRIMARY KEY, snippet_title varchar(512) NOT NULL, snippet_reference varchar(512), snippet_content text NOT NULL, snippet_created_on date NOT NULL, snippet_updated_on date, snippet_hash varchar(64) NOT NULL UNIQUE)";
-    var queryToGenerateUserSnippetTable = "CREATE TABLE IF NOT EXISTS pintext_usersnippet(usersnippet_id SERIAL PRIMARY KEY, user_id int NOT NULL, FOREIGN KEY (user_id) REFERENCES pintext_users(user_id), snippet_id int NOT NULL, FOREIGN KEY (snippet_id) REFERENCES pintext_snippets(snippet_id))";
+    var queryToGenerateUserSnippetTable = "CREATE TABLE IF NOT EXISTS pintext_usersnippet(usersnippet_id SERIAL PRIMARY KEY, user_id int, FOREIGN KEY (user_id) REFERENCES pintext_users(user_id), snippet_id int NOT NULL, FOREIGN KEY (snippet_id) REFERENCES pintext_snippets(snippet_id), view_for_all BOOLEAN NOT NULL)";
 
     var primaryTables = [queryToGenerateUserTable, queryToGenerateSnippetTable];
     var secondaryTables = [queryToGenerateUserSnippetTable];
