@@ -62,7 +62,22 @@ module.exports = function (req, res, next) {
             res.status(200).json(allSnippets);
 
         }).catch(function(err) {
-            console.log(err);
+            var error = new Error();
+            error = {
+                status: 500,
+                clientMessage: {
+                    code: 'XXX',
+                    type: 'Type of error',
+                    developerMessage: 'Internal Server Error',
+                    endUserMessage: 'Internal Server Error'
+                },
+                serverMessage: {
+                    location: 'File - getAllSnippets.js, Route - GET /snippet/, Function - extractAllSnippets',
+                    context: 'Retrieving all the snippets for the array of snippet_ids',
+                    error: err
+                }
+            }
+            next(error);
         });
 
     }
