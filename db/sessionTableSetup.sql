@@ -1,4 +1,6 @@
-﻿CREATE TABLE "pintext_session" (
+﻿DROP TABLE IF EXISTS "pintext_session" CASCADE;
+
+CREATE TABLE "pintext_session" (
   "sid" varchar NOT NULL COLLATE "default",
 	"sess" json NOT NULL,
 	"expire" timestamp(6) NOT NULL
