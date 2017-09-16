@@ -6,7 +6,7 @@ module.exports = function(error, req, res, next) {
         res.status(error.status).write(JSON.stringify(error.clientMessage, null, '  '));
         res.end();
     }
-    
+    console.log(error);
     console.log(JSON.stringify(error, null, '  '));
 
     next();
