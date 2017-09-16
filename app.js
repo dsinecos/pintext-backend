@@ -23,6 +23,7 @@ var sessionOptions = {
 
 var index = require('./api/index');
 var users = require('./api/users/users.js');
+// var snippet = require('./api/snippet/snippetRoutes.js');
 
 var app = express();
 
@@ -40,8 +41,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 require('./api/users/passportLocalAuthentication.js')(passport);
 
+require('./api/users/setupPublicUser.js');
+
 app.use('/', index);
 app.use('/users', users);
+// app.use('/snippet', snippet);
 
 app.use(require('./errorHandler.js'));
 
