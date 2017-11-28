@@ -56,4 +56,12 @@ router.post('/', validateUserData, function (req, res, next) {
 
 });
 
+router.get('/logout', function(req, res, next) {
+  req.logOut();
+  req.session.destroy(function (err) {
+    res.write("Logged out");
+    res.end();
+  });
+});
+
 module.exports = router;
