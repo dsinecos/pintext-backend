@@ -2,12 +2,9 @@ var util = require("util");
 
 module.exports = function(error, req, res, next) {
     
-    if(error.status && error.clientMessage) {
-        res.status(error.status).write(JSON.stringify(error.clientMessage, null, '  '));
-        res.end();
-    }
-    console.log(error);
-    console.log(JSON.stringify(error, null, '  '));
+    res.status(500).json({
+        developmentMessage: 'Failed'
+    });
 
     next();
 }

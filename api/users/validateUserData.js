@@ -4,7 +4,7 @@ module.exports = function (req, res, next) {
 
     const schema = joi.object().keys({
         username: joi.string().required().alphanum().min(3).max(30),
-        password: joi.string().required().alphanum().min(8)
+        password: joi.string().required().alphanum().min(1)
     });
 
     var validationResult = new Promise(function (resolve, reject) {

@@ -53,7 +53,7 @@ require('./api/users/passportLocalAuthentication.js')(passport);
 require('./api/users/setupPublicUser.js');
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/user', users);
 app.use('/snippet', snippet);
 
 app.use(require('./errorHandler.js'));

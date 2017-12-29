@@ -9,29 +9,16 @@ var insertNewUser = require('./insertNewUser.js');
 
 // For user login
 router.post('/login', validateUserData, passport.authenticate('local', { failureRedirect: '/failed' }), function (req, res, next) {
-  res.write("Logged in successfully \n");
-  res.end();
+  res.status(200).json({
+    developmentMessage: "Success"
+  })
 });
 
 // For Failed Login
 router.get('/failed', function (req, res, next) {
-
-  var error = new Error();
-  error = {
-    status: 401,
-    clientMessage: {
-      code: '',
-      type: '',
-      developerMessage: 'Unauthorized',
-      endUserMessage: 'Unauthorized'
-    },
-    serverMessage: {
-      location: 'File - users.js',
-      context: 'Unauthorized',
-      error: null
-    }
-  }
-  next(error);
+  res.status(401).json({
+    developmentMessage: "Failed"
+  })
 })
 
 // For successive requests after Login
@@ -41,26 +28,49 @@ router.get('/rt', isAuthenticated, function (req, res, next) {
 })
 
 // For user signup 
-router.post('/', validateUserData, function (req, res, next) {
+router.post('/signup', validateUserData, function (req, res, next) {
 
   var saltRounds = 10;
   var password = req.body.password;
   var username = req.body.username;
 
-  function respondUser(responseForUser) {
-    res.status(200).send(responseForUser);
-    console.log(responseForUser);
-  }
+  bcrypt.genSalt(saltRounds)
+    .then(function (salt) {
 
-  insertNewUser(saltRounds, username, password, respondUser, next);  
+      bcrypt.hash(password, salt)
+        .then(function (hash) {
 
+          var sqlQuery = `INSERT
+                  INTO pintext_users (username, password)
+                  VALUES ($1, $2)`;
+
+          pintextDatabaseClient.query(sqlQuery, [username, hash])
+            .then(function (data) {
+              res.status(200).json({
+                developmentMessage: "Success"
+              });
+            })
+            .catch(function (err) {
+
+              next(err);
+            })
+        });
+    });
 });
 
-router.get('/logout', function(req, res, next) {
+router.get('/logout', isAuthenticated, function (req, res, next) {
+  
   req.logOut();
+  
   req.session.destroy(function (err) {
-    res.write("Logged out");
-    res.end();
+    if(err) {
+      next(err);
+    }
+
+    res.status(200).json({
+      developmentMessage: "Success"
+    });
+
   });
 });
 
