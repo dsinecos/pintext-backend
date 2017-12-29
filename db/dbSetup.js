@@ -13,6 +13,10 @@ function runSQLQuery(databaseQuery) {
 
 function tableCreationComplete(data) {
     console.log("Table creation complete");
+    // runSQLQuery("DELETE FROM public.pintext_session WHERE 1=1")
+    //     .then((data) => process.exit())
+    //     .catch((err) => console.log(err));
+
     process.exit();
 }
 
@@ -22,19 +26,19 @@ var queryToDropUserSnippetTable = "DROP TABLE IF EXISTS pintext_usersnippet CASC
 
 var queryToDropTables = [queryToDropUserTable, queryToDropSnippetTable, queryToDropUserSnippetTable];
 
-var queryToDropTablesPromises = queryToDropTables.map(function(databaseQuery) {
+var queryToDropTablesPromises = queryToDropTables.map(function (databaseQuery) {
     return runSQLQuery(databaseQuery);
 });
 
 Promise.all(queryToDropTablesPromises)
-.then(function(data) {
-    console.log("Existing tables dropped");
-    generateTables();
-})
-.catch(function(error) {
-    console.log("Error dropping existing tables");
-    console.log(error);
-});
+    .then(function (data) {
+        console.log("Existing tables dropped");
+        generateTables();
+    })
+    .catch(function (error) {
+        console.log("Error dropping existing tables");
+        console.log(error);
+    });
 
 function generateTables() {
 
@@ -50,23 +54,23 @@ function generateTables() {
     });
 
     Promise.all(primaryTablesPromises)
-    .then(function (data) {
+        .then(function (data) {
 
-        var secondaryTablesPromises = secondaryTables.map(function (databaseQuery) {
-            return runSQLQuery(databaseQuery);
-        });
+            var secondaryTablesPromises = secondaryTables.map(function (databaseQuery) {
+                return runSQLQuery(databaseQuery);
+            });
 
-        Promise.all(secondaryTablesPromises)
-        .then(tableCreationComplete)
+            Promise.all(secondaryTablesPromises)
+                .then(tableCreationComplete)
+                .catch(function (error) {
+                    console.log("Error creating secondary tables");
+                    console.log(error);
+                });
+
+        })
         .catch(function (error) {
-            console.log("Error creating secondary tables");
+            console.log("Error creating primary tables");
             console.log(error);
         });
-
-    })
-    .catch(function (error) {
-        console.log("Error creating primary tables");
-        console.log(error);
-    });
 }
 

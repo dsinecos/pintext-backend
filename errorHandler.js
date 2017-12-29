@@ -1,7 +1,7 @@
 var util = require("util");
 
 module.exports = function(error, req, res, next) {
-    
+    console.log(error);
     res.status(500).json({
         developmentMessage: 'Failed'
     });
