@@ -85,7 +85,9 @@ module.exports = function (req, res, next) {
             pintextDatabaseClient
                 .query(sqlQuery, [user_id, snippet_id, defaultViewForAllStatusForSnippet])
                 .then(function () {
-                    res.status(200).send("Snippet added succesfully");
+                    res.status(200).json({
+                        developmentMessage: "Success"
+                    });
                 })
                 .catch(function (err) {
                     next(err);

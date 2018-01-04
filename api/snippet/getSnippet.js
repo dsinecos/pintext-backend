@@ -109,7 +109,7 @@ module.exports = function (req, res, next) {
 
     function checkDisplayStatusForSnippet() {
 
-        // console.log("Inside checkDisplayStatusForSnippet");
+        console.log("Inside checkDisplayStatusForSnippet");
         // console.log("This is the snippet_id inside : " + snippet_id);
         // var snippet_id = snippet_id;
 
@@ -127,7 +127,7 @@ module.exports = function (req, res, next) {
 
             // console.log("This is the usersnippet result : " + result);
 
-            // var usersnippet_user_id = result[0].user_id;
+            var usersnippet_user_id = result[0].user_id;
             var usersnippet_view_for_all = result[0].view_for_all;
 
             if (usersnippet_view_for_all) {
