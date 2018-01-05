@@ -67,7 +67,7 @@ router.get('/logout', isAuthenticated, function (req, res, next) {
       next(err);
     }
 
-    res.status(200).json({
+    res.status(200).clearCookie('connect.sid', {path: '/'}).json({
       developmentMessage: "Success"
     });
 
