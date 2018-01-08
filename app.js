@@ -8,13 +8,13 @@ var passport = require('passport');
 
 var connectPgSimple = require('connect-pg-simple')(session);
 var PostgreSqlStore = new connectPgSimple({
-  conString: "pg://postgres:postgres@localhost:5432/pintext",
+  conString: process.env.DATABASE_URL || "pg://postgres:postgres@localhost:5432/pintext",
   tableName: "pintext_session",
   pruneSessionInterval: false,
 });
 
 var sessionOptions = {
-  secret: "Able was i ere i saw elbA",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: PostgreSqlStore,
