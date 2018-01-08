@@ -85,9 +85,20 @@ module.exports = function (req, res, next) {
             pintextDatabaseClient
                 .query(sqlQuery, [user_id, snippet_id, defaultViewForAllStatusForSnippet])
                 .then(function () {
-                    res.status(200).json({
-                        developmentMessage: "Success"
+
+                    var sqlQuery = `SELECT snippet_hash FROM pintext_snippets WHERE snippet_id = $1`;
+
+                    pintextDatabaseClient
+                    .query(sqlQuery, [snippet_id])
+                    .then(function(data) {
+                        res.status(200).json({
+                            developmentMessage: "Success",
+                            permalink: data[0].snippet_hash
+                        });
+
                     });
+
+                    
                 })
                 .catch(function (err) {
                     next(err);
