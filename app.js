@@ -28,7 +28,14 @@ var snippet = require('./api/snippet/snippetRoutes.js');
 var app = express();
 
 var allowCrossDomain = function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+
+  var allowedOrigins = ['http://localhost:8080', 'https://pintext-frontend.herokuapp.com', 'http://localhost:5000'];
+  var origin = req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  // res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Headers', 'Content-Type');
