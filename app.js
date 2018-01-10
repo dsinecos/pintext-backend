@@ -47,6 +47,18 @@ app.use(allowCrossDomain);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.set('trust proxy', 1);
+
+app.use(function(req, res, next) {
+
+  console.log("req.hostname : " + req.hostname);
+  console.log("req.protocol : " + req.protocol);
+  console.log("req.ip       : " + req.ip);
+  console.log("req.ips      : " + req.ips);
+
+  next();
+})
+
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
