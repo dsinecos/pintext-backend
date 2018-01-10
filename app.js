@@ -19,7 +19,8 @@ var sessionOptions = {
   saveUninitialized: false,
   store: PostgreSqlStore,
   // cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
-  cookie: { maxAge: null, httpOnly: false }
+  cookie: { maxAge: null, httpOnly: false },
+  proxy: true
 };
 
 var index = require('./api/index');
