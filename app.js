@@ -36,7 +36,7 @@ var allowCrossDomain = function (req, res, next) {
   // if (allowedOrigins.indexOf(origin) > -1) {
   //   res.setHeader('Access-Control-Allow-Origin', origin);
   // }
-  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Origin', "*");
 
   // res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -74,9 +74,15 @@ require('./api/users/passportLocalAuthentication.js')(passport);
 
 require('./api/users/setupPublicUser.js');
 
-app.use('/', index);
-app.use('/user', users);
-app.use('/snippet', snippet);
+// app.use('/', index);
+
+app.use('/', express.static(path.join(__dirname, 'dist')));
+
+
+app.use('/api/user', users);
+app.use('/api/snippet', snippet);
+
+app.use("*", express.static(path.join(__dirname, 'dist')));
 
 app.use(require('./errorHandler.js'));
 

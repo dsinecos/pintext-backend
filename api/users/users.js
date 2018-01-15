@@ -8,7 +8,7 @@ var validateUserData = require('./validateUserData.js');
 var insertNewUser = require('./insertNewUser.js');
 
 // For user login
-router.post('/login', validateUserData, passport.authenticate('local', { failureRedirect: '/user/failed' }), function (req, res, next) {
+router.post('/login', validateUserData, passport.authenticate('local', { failureRedirect: '/api/user/failed' }), function (req, res, next) {
   res.status(200).json({
     developmentMessage: "Success"
   })
